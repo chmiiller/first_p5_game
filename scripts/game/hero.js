@@ -1,44 +1,72 @@
-class Hero {
-  constructor(img) {
-    const SPRITE_ROWS = 4;
-    const SPRITE_COLUMNS = 4;
-    const SPRITE_WIDTH = 220;
-    const SPRITE_HEIGHT = 270;
+class Hero extends Animation {
+    constructor(matrix, image, x, imageWidth, imageHeight, spriteWidth, spriteHeight) {
+        super(matrix, image, x, imageWidth, imageHeight, spriteWidth, spriteHeight);
+        
+        this.halfWidth = this.imageWidth * 0.5;
+        this.halfHeight = this.imageHeight * 0.5;
 
-    this.image = img;
-    this.heroWidth = SPRITE_WIDTH;
-    this.heroHeight = SPRITE_HEIGHT;
-    this.heroWidthHalf = this.heroWidth * 0.5;
-    this.heroHeightHalf = this.heroHeight * 0.5;
-    this.currentFrame = 0;
-    this.matrix = [];
-    
-    // Creating sprite matrix
-    for(let r = 0; r < SPRITE_ROWS; r++){
-        for(let c = 0; c < SPRITE_COLUMNS; c++){
-            this.matrix.push({
-                x: this.heroWidth * c,
-                y: this.heroHeight * r
-            });
+        this.screenRightLimit = width - (this.imageWidth * 0.8);
+
+        this.posY = height - imageHeight;
+        this.y = this.posY;
+
+        this.jumpForce = 0;
+        this.gravity = 5;
+        this.jumpCount = 0;
+
+        this.hitBoxOffset = 0.7;
+        this.jumpSound = loadSound("/../../assets/audio/jump.mp3");
+    }
+
+    jump() {
+        if(this.jumpCount < 2){
+            this.jumpSound.play();
+            this.jumpForce = -40;
+            this.jumpCount++;
         }
     }
 
-    this.matrixSize = this.matrix.length - 1;
-  }
-
-  render() {
-    const posBottom = height - this.heroHeightHalf;
-    const spriteX = this.matrix[this.currentFrame].x;
-    const spriteY = this.matrix[this.currentFrame].y;
-    image(this.image,0,posBottom,this.heroWidthHalf,this.heroHeightHalf,spriteX,spriteY,this.heroWidth,this.heroHeight);
-    
-    this.move();
-  }
-
-  move() {
-    this.currentFrame++;
-    if (this.currentFrame >= this.matrixSize) {
-      this.currentFrame = 0;
+    applyGravity() {
+        this.y += this.jumpForce;
+        this.jumpForce += this.gravity;
+        if (this.y > this.posY) {
+            this.y = this.posY;
+            this.jumpForce = 0;
+            this.jumpCount = 0;
+        }
     }
-  }
+
+    walk(direction){
+        switch (direction) {
+            case 'left':
+                if (this.x > 0) {
+                    this.x -= 10;
+                }
+                
+                break;
+            
+            case 'right':
+                if (this.x < this.screenRightLimit) {
+                    this.x += 10;
+                }
+                break;
+        
+            default:
+                this.x += 10;
+                break;
+        }
+    }
+
+    collisionCheck(enemy) {
+        return collideRectRect(
+            this.x,
+            this.y,
+            this.imageWidth * this.hitBoxOffset,
+            this.imageHeight * this.hitBoxOffset,
+            enemy.x,
+            enemy.y,
+            enemy.imageWidth * this.hitBoxOffset,
+            enemy.imageHeight * this.hitBoxOffset,
+        );
+    }
 }
