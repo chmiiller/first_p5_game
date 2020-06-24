@@ -1,17 +1,17 @@
 class Hero extends Animation {
-    constructor(matrix, image, x, imageWidth, imageHeight, spriteWidth, spriteHeight) {
-        super(matrix, image, x, imageWidth, imageHeight, spriteWidth, spriteHeight);
+    constructor(matrix, image, x, offsetY = 0, imageWidth, imageHeight, spriteWidth, spriteHeight) {
+        super(matrix, image, x, offsetY, imageWidth, imageHeight, spriteWidth, spriteHeight);
         
         this.halfWidth = this.imageWidth * 0.5;
         this.halfHeight = this.imageHeight * 0.5;
 
         this.screenRightLimit = width - (this.imageWidth * 0.8);
 
-        this.posY = height - imageHeight;
+        this.posY = height - imageHeight - offsetY;
         this.y = this.posY;
 
         this.jumpForce = 0;
-        this.gravity = 5;
+        this.gravity = 6;
         this.jumpCount = 0;
 
         this.hitBoxOffset = 0.7;
@@ -21,7 +21,7 @@ class Hero extends Animation {
     jump() {
         if(this.jumpCount < 2){
             this.jumpSound.play();
-            this.jumpForce = -40;
+            this.jumpForce = -50;
             this.jumpCount++;
         }
     }
@@ -58,6 +58,9 @@ class Hero extends Animation {
     }
 
     collisionCheck(enemy) {
+        // noFill();
+        // rect(this.x,this.y,this.imageWidth * this.hitBoxOffset,this.imageHeight * this.hitBoxOffset);
+        // rect(enemy.x,enemy.y,enemy.imageWidth * this.hitBoxOffset,enemy.imageHeight * this.hitBoxOffset);
         return collideRectRect(
             this.x,
             this.y,

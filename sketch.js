@@ -2,19 +2,15 @@ const BG_SPEED = 2;
 const GAME_FRAME_RATE = 40;
 
 let imgBackground;
-let imgHero;
-let imgEnemy;
-
 let bgMusic;
-
 let scenario;
-let hero;
-let enemy;
-
-let heroMatrix = []
-let enemyMatrix = []
+let score;
+let gameOverImage;
 
 // Creating hero
+let hero;
+let heroMatrix = []
+let imgHero;
 const heroSprite = {
     matrixRows: 4,
     matrixColumns: 4,
@@ -34,7 +30,10 @@ for (let r = 0; r < heroSprite.matrixRows; r++) {
     }
 }
 
-// Creating enemy
+const enemies = [];
+// Setting up enemy
+let enemyMatrix = []
+let imgEnemy;
 const enemySprite = {
     matrixRows: 7,
     matrixColumns: 4,
@@ -51,21 +50,87 @@ for (let r = 0; r < enemySprite.matrixRows; r++) {
     }
 }
 
+// Creating troll
+let enemyTrollMatrix = []
+let imgEnemyTroll;
+const enemyTrollSprite = {
+    matrixRows: 6,
+    matrixColumns: 5,
+    matrixSize: 28,
+    frameCount: 0,
+    w: 400,
+    halfW: 200,
+    imagePath: "/assets/images/enemies/troll.png",
+};
+for (let r = 0; r < enemyTrollSprite.matrixRows; r++) {
+    for (let c = 0; c < enemyTrollSprite.matrixColumns; c++) {
+        enemyTrollMatrix.push({
+            x: enemyTrollSprite.w * c,
+            y: enemyTrollSprite.w * r,
+        });
+        enemyTrollSprite.frameCount++
+        if(enemyTrollSprite.frameCount > enemyTrollSprite.matrixSize){
+            break;
+        }
+    }
+}
+
+// Creating flying
+let enemyFlyingMatrix = []
+let imgEnemyFlying;
+const enemyFlyingSprite = {
+    matrixRows: 6,
+    matrixColumns: 3,
+    matrixSize: 16,
+    frameCount: 0,
+    w: 200,
+    h: 150,
+    halfW: 100,
+    halfH: 75,
+    imagePath: "/assets/images/enemies/flying-drop.png",
+};
+for (let r = 0; r < enemyFlyingSprite.matrixRows; r++) {
+    for (let c = 0; c < enemyFlyingSprite.matrixColumns; c++) {
+        enemyFlyingMatrix.push({
+            x: enemyFlyingSprite.w * c,
+            y: enemyFlyingSprite.h * r,
+        });
+        enemyFlyingSprite.frameCount++
+        if(enemyFlyingSprite.frameCount > enemyFlyingSprite.matrixSize){
+            break;
+        }
+    }
+}
+
 function preload() {
     imgBackground = loadImage("/assets/images/background/forest.png");
     imgHero = loadImage(heroSprite.imagePath);
     imgEnemy = loadImage(enemySprite.imagePath);
+    imgEnemyTroll = loadImage(enemyTrollSprite.imagePath);
+    imgEnemyFlying = loadImage(enemyFlyingSprite.imagePath);
+    gameOverImage = loadImage("/assets/images/assets/game-over.png");
     bgMusic = loadSound("/assets/audio/bg_music.mp3");
 }
 
 function setup() {
     createCanvas(windowWidth, windowHeight);
     scenario = new Scenario(imgBackground, BG_SPEED);
+    score = new Score();
     frameRate(GAME_FRAME_RATE);
     // bgMusic.loop();
   
-    hero = new Hero(heroMatrix, imgHero, 0, heroSprite.halfW, heroSprite.halfH, heroSprite.w, heroSprite.h);
-    enemy = new Enemy(enemyMatrix, imgEnemy, width - enemySprite.halfW, enemySprite.halfW, enemySprite.halfW, enemySprite.w, enemySprite.w);
+    hero = new Hero(heroMatrix, imgHero, 0, 30, heroSprite.halfW, heroSprite.halfH, heroSprite.w, heroSprite.h);
+    const enemy = new Enemy(enemyMatrix, imgEnemy, width - enemySprite.halfW, 30, enemySprite.halfW, enemySprite.halfW, enemySprite.w, enemySprite.w);
+    
+    const enemyTroll = new Enemy(enemyTrollMatrix, imgEnemyTroll, width - enemyTrollSprite.halfW, 0, enemyTrollSprite.halfW, enemyTrollSprite.halfW, enemyTrollSprite.w, enemyTrollSprite.w);
+    enemyTroll.setDelay(200);
+    
+    const enemyFlying = new Enemy(enemyFlyingMatrix, imgEnemyFlying, 0, 250, enemyFlyingSprite.halfW, enemyFlyingSprite.halfH, enemyFlyingSprite.w, enemyFlyingSprite.h);
+    enemyFlying.setDelay(2200);
+
+    enemies.push(enemy);
+    enemies.push(enemyTroll);
+    enemies.push(enemyFlying);
 }
 
 function keyPressed() {
@@ -89,10 +154,15 @@ function draw() {
     hero.render();
     hero.applyGravity();
 
-    enemy.render();
-    enemy.walk();
+    enemies.forEach(enemy => {
+        enemy.render();
+        enemy.walk();
+        if (hero.collisionCheck(enemy)) {
+            noLoop();
+            image(gameOverImage, width * 0.5 - 200, height * 0.5 - 40);
+        }
+    });
 
-    if (hero.collisionCheck(enemy)) {
-        noLoop();
-    }
+    score.displayScore();
+    score.addScore();
 }
