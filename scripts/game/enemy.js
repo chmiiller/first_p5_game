@@ -14,7 +14,7 @@ class Enemy extends Animation {
 
     walk() {
         this.x -= this.speed;
-        if (this.x < -this.imageWidth - this.delay) {
+        if (this.x < -(this.imageWidth*2) - this.delay) {
             this.x = width;
             //this.setSpeed();
         }
