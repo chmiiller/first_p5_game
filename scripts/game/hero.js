@@ -15,7 +15,7 @@ class Hero extends Animation {
         this.jumpCount = 0;
 
         this.hitBoxOffset = 0.7;
-        this.jumpSound = loadSound("/../../assets/audio/jump.mp3");
+        this.jumpSound = loadSound("assets/audio/jump.mp3");
 
         this.invincible = false;
     }
