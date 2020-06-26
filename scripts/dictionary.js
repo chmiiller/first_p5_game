@@ -33,7 +33,7 @@ const heroSprite = {
     h: 270,
     halfW: 110,
     halfH: 135,
-    imagePath: "first_p5_game/assets/images/hero/running.png",
+    imagePath: "assets/images/hero/running.png",
 };
 
 for (let r = 0; r < heroSprite.matrixRows; r++) {
@@ -54,7 +54,7 @@ const enemySprite = {
     matrixColumns: 4,
     w: 104,
     halfW: 52,
-    imagePath: "first_p5_game/assets/images/enemies/drop.png",
+    imagePath: "assets/images/enemies/drop.png",
 };
 for (let r = 0; r < enemySprite.matrixRows; r++) {
     for (let c = 0; c < enemySprite.matrixColumns; c++) {
@@ -75,7 +75,7 @@ const enemyTrollSprite = {
     frameCount: 0,
     w: 400,
     halfW: 200,
-    imagePath: "first_p5_game/assets/images/enemies/troll.png",
+    imagePath: "assets/images/enemies/troll.png",
 };
 for (let r = 0; r < enemyTrollSprite.matrixRows; r++) {
     for (let c = 0; c < enemyTrollSprite.matrixColumns; c++) {
@@ -102,7 +102,7 @@ const enemyFlyingSprite = {
     h: 150,
     halfW: 100,
     halfH: 75,
-    imagePath: "first_p5_game/assets/images/enemies/flying-drop.png",
+    imagePath: "assets/images/enemies/flying-drop.png",
 };
 for (let r = 0; r < enemyFlyingSprite.matrixRows; r++) {
     for (let c = 0; c < enemyFlyingSprite.matrixColumns; c++) {
