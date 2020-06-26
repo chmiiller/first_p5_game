@@ -16,6 +16,8 @@ class Hero extends Animation {
 
         this.hitBoxOffset = 0.7;
         this.jumpSound = loadSound("/../../assets/audio/jump.mp3");
+
+        this.invincible = false;
     }
 
     jump() {
@@ -57,7 +59,17 @@ class Hero extends Animation {
         }
     }
 
+    setInvincible() {
+        this.invincible = true;
+        setTimeout(() => {
+            this.invincible = false;
+        }, 1500);
+    }
+
     collisionCheck(enemy) {
+        if (this.invincible) {
+            return false;
+        }
         // noFill();
         // rect(this.x,this.y,this.imageWidth * this.hitBoxOffset,this.imageHeight * this.hitBoxOffset);
         // rect(enemy.x,enemy.y,enemy.imageWidth * this.hitBoxOffset,enemy.imageHeight * this.hitBoxOffset);
@@ -72,4 +84,7 @@ class Hero extends Animation {
             enemy.imageHeight * this.hitBoxOffset,
         );
     }
+
+    
+    
 }

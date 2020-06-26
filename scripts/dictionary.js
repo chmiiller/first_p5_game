@@ -10,12 +10,17 @@ let gameOverImage;
 let startupImage;
 let startupFont;
 
+let heartImage;
+let life;
+
 let scenario;
 let score;
 let buttonManager;
 
 let currentScene;
 let scenes = {};
+
+let level;
 
 // Creating hero
 let hero;

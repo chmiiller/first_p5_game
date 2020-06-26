@@ -5,22 +5,18 @@ class Enemy extends Animation {
         this.maxSpeed = 10;
         this.minSpeed = 4;
         this.speed = this.initialSpeed;
-        this.delay = 0;
-    }
-
-    setDelay(delayValue) {
-        this.delay = delayValue;
+        this.x = width;
     }
 
     walk() {
         this.x -= this.speed;
-        if (this.x < -(this.imageWidth*2) - this.delay) {
-            this.x = width;
-            //this.setSpeed();
-        }
     }
 
     setSpeed() {
         this.speed = Math.random() * (this.maxSpeed - this.minSpeed) + this.minSpeed;
+    }
+
+    enterScene() {
+        this.x = width;
     }
 }

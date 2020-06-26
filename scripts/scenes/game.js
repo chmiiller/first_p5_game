@@ -1,11 +1,13 @@
 class Game {
     constructor() {
         this.currentEnemyIndex = 0;
+        this.stage = level.map;
     }
 
     setup() {
         scenario = new Scenario(imgBackground, BG_SPEED);
         score = new Score();
+        life = new Life(level.settings.maxLife, level.settings.initialLife);
     
         // bgMusic.loop();
   
@@ -30,6 +32,8 @@ class Game {
     draw() {
         scenario.render();
         scenario.move();
+
+        life.draw();
     
         if (keyIsDown(RIGHT_ARROW)) {
             hero.walk('right');
@@ -41,25 +45,30 @@ class Game {
     
         hero.render();
         hero.applyGravity();
-    
-        const currentEnemy = enemies[this.currentEnemyIndex];
-        const isEnemyOnScreen = currentEnemy.x < -(currentEnemy.imageWidth+10);
-    
         
+        const currentStage = this.stage[this.currentEnemyIndex];
+        const currentEnemy = enemies[currentStage.enemy];
+        currentEnemy.speed = currentStage.speed;
+        const isEnemyOnScreen = currentEnemy.x < -(currentEnemy.imageWidth+100);
+    
         currentEnemy.render();
         currentEnemy.walk();
     
         if (isEnemyOnScreen) {
             this.currentEnemyIndex++;
-            if (this.currentEnemyIndex > enemies.length-1) {
+            currentEnemy.enterScene();
+            if (this.currentEnemyIndex > this.stage.length-1) {
                 this.currentEnemyIndex = 0;
             }
-            currentEnemy.speed = parseInt(random(12,25));
         }
     
         if (hero.collisionCheck(currentEnemy)) {
-            noLoop();
-            image(gameOverImage, width * 0.5 - 200, height * 0.5 - 40);
+            life.oneLost();
+            hero.setInvincible();
+            if (life.current === 0) {
+                image(gameOverImage, width * 0.5 - 200, height * 0.5 - 40);
+                noLoop();
+            }
         }
     
         score.displayScore();

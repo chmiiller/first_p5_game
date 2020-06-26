@@ -49,8 +49,11 @@ const GAME_FRAME_RATE = 40;
 ## Chores
 
 * Create enemy class constructor arguments (too many)
-* First enemies with wrong initialX positions
 * Collision between troll and hero is bad
+* Power ups
+* Life Up
+* Invincible Sprites
+* End of level
 
 ## Built With
 
